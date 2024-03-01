@@ -2,6 +2,8 @@
 
 
 HBRUSH skyBlue = CreateSolidBrush(RGB(68,243, 255));
+HBRUSH white = CreateSolidBrush(RGB(250,250,250));
+HBRUSH black = CreateSolidBrush(RGB(0,0,0));
 
 bool cloudGenerated = false;
 bool initialCharacter = false;
@@ -11,6 +13,9 @@ RECT clouds[24];
 RECT characterRect;
 
 int char_pos = 0;// 590 from the border
+int char_y_pos = 0;
+
+
 
 void generateClouds()
 {   
@@ -72,7 +77,7 @@ void paintClouds(HWND hwnd){
             
             SetRect(&temp, 0, clouds[i].top, clouds[i].right + char_pos, clouds[i].bottom);
 
-            FillRect(paints.hdc, &temp,CreateSolidBrush(RGB(250, 250, 250)));
+            FillRect(paints.hdc, &temp, white);
         }
         else if((clouds[i].right + char_pos > 1200) && (clouds[i].left + char_pos < 1200))//right border
         {
@@ -81,7 +86,7 @@ void paintClouds(HWND hwnd){
             
             SetRect(&temp, clouds[i].left+char_pos, clouds[i].top, 1200, clouds[i].bottom);
 
-            FillRect(paints.hdc, &temp,CreateSolidBrush(RGB(250, 250, 250)));
+            FillRect(paints.hdc, &temp, white);
         }
         else
         {
@@ -90,7 +95,7 @@ void paintClouds(HWND hwnd){
             rect.right = rect.right + char_pos;
             rect.left = rect.left + char_pos;
 
-            FillRect(paints.hdc, &rect,CreateSolidBrush(RGB(250, 250, 250)));
+            FillRect(paints.hdc, &rect, white);
         }
     }
 
@@ -137,7 +142,7 @@ void paintBlueSkyBackground(HWND hwnd)
 
 void paintCharacter(HWND hwnd)
 {
-    SetRect(&characterRect, 590, 725, 610, 800);
+    SetRect(&characterRect, 590, 725 - char_y_pos, 610, 800 - char_y_pos);
 
     InvalidateRect(hwnd, NULL, false);
 
@@ -145,12 +150,42 @@ void paintCharacter(HWND hwnd)
 
     BeginPaint(hwnd, &paints);
 
-    FillRect(paints.hdc, &characterRect, CreateSolidBrush(RGB(0,0,0)));
+    FillRect(paints.hdc, &characterRect, black);
 
     EndPaint(hwnd, &paints);
 }
 
-void move_char(int i)
+void move_char(int i, type_of_movement movement_type)
 {
-    char_pos = char_pos + i;
+    switch(movement_type)
+    {
+        case(WALK):
+            char_pos = char_pos + i;
+            break;
+        case(JUMP):
+            char_y_pos += i;
+            break;
+        case(JUMP_START):
+            if(isJumping == false){
+                std::thread idc (jumpControl);
+                idc.detach();
+            }
+            break;
+    }
+}
+
+void jumpControl()
+{
+    isJumping = true;
+    for(int i = 0; i != 15; i++)
+    {
+        move_char(10, JUMP);
+        Sleep(10);
+    }
+    for(int i = 0; i != 15; i++)
+    {
+        move_char(-10, JUMP);
+        Sleep(10);
+    }
+    isJumping = false;
 }

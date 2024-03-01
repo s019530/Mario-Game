@@ -8,4 +8,4 @@ void levelOneSetup(HWND hwnd);
 
 void drawLevelOne(HWND hwnd);
 
-void levelOneKeyHandler(HWND hwnd, WPARAM wparam);
+void levelOneKeyHandler(HWND hwnd, int wparam);

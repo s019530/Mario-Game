@@ -3,6 +3,8 @@
 #include <winuser.h>
 
 #include "LevelOne.hpp"
+#include "backgroundPainting.hpp"
+#include "util.hpp"
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -84,7 +86,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 SetWindowPos(hwnd, 0, rect.left, rect.top, 1200, 800, 0);
                 break;
             }
-        case WM_KEYDOWN:
+        /*case WM_KEYDOWN:
             {
                 switch(state_of_game)
                 {
@@ -95,8 +97,31 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                         }
                 }
                 break;
-            }    
-    
+            }    */
+
+        case WM_CREATE:
+            SetTimer(hwnd, 0, 10, (TIMERPROC) NULL);
+            break;
+        
+
+        case WM_TIMER:
+            if(isKeyDown(CK_W))
+            {
+                levelOneKeyHandler(hwnd, CK_W);
+            }
+            else if(isKeyDown(CK_A))
+            {
+                levelOneKeyHandler(hwnd, CK_A);
+            }
+            else if(isKeyDown(CK_D))
+            {
+                levelOneKeyHandler(hwnd, CK_D);
+            }
+            else{
+                paintBlueSkyBackground(hwnd);
+                paintCharacter(hwnd);
+            }
+            break;
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;

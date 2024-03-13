@@ -11,3 +11,4 @@ typedef enum CUSTOM_KEY{
 
 bool isKeyDown(CUSTOM_KEY key);
 
+int generateNumber(int offset, int max);

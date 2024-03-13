@@ -7,3 +7,8 @@ bool isKeyDown(CUSTOM_KEY key){
     }
     return false;
 }
+
+
+int generateNumber(int offset, int max){
+    return offset + (rand() % max);
+}

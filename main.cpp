@@ -76,28 +76,17 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 {
                     case(LEVELONE):
                         {
-                            levelOneSetup(hwnd);
+                            LevelKeyHandler(hwnd, 0);
                             break;
                         }
-                }
+                }   
 
                 RECT rect;
                 GetWindowRect(hwnd, &rect);
                 SetWindowPos(hwnd, 0, rect.left, rect.top, 1200, 800, 0);
                 break;
             }
-        /*case WM_KEYDOWN:
-            {
-                switch(state_of_game)
-                {
-                    case(LEVELONE):
-                        {
-                            levelOneKeyHandler(hwnd, wParam);
-                            break;
-                        }
-                }
-                break;
-            }    */
+            break;
 
         case WM_CREATE:
             SetTimer(hwnd, 0, 10, (TIMERPROC) NULL);
@@ -107,15 +96,15 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_TIMER:
             if(isKeyDown(CK_W))
             {
-                levelOneKeyHandler(hwnd, CK_W);
+                LevelKeyHandler(hwnd, CK_W);
             }
             else if(isKeyDown(CK_A))
             {
-                levelOneKeyHandler(hwnd, CK_A);
+                LevelKeyHandler(hwnd, CK_A);
             }
             else if(isKeyDown(CK_D))
             {
-                levelOneKeyHandler(hwnd, CK_D);
+                LevelKeyHandler(hwnd, CK_D);
             }
             else{
                 paintBlueSkyBackground(hwnd);

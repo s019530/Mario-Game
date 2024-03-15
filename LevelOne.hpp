@@ -3,9 +3,4 @@
 #include <winuser.h>
 
 
-
-void levelOneSetup(HWND hwnd);
-
-void drawLevelOne(HWND hwnd);
-
-void levelOneKeyHandler(HWND hwnd, int wparam);
+void LevelKeyHandler(HWND hwnd, int wparam);

@@ -1,10 +1,12 @@
 #include <iostream>
 #include <windows.h>
 #include <winuser.h>
+#include <vector>
+#include <string>
 
 #include <thread>
 
-#define block_size 250;
+const int block_size = 250;
 const int char_width = 20;
 const int window_width = 1200;
 
@@ -24,10 +26,6 @@ typedef enum type_of_collision{
     TOP,
     ALL
 }type_of_collision;
-
-void generateClouds();
-
-void generateGround();
 
 void paintGround(HWND hwnd);
 

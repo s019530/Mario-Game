@@ -2,12 +2,7 @@
 #include "backgroundPainting.hpp"
 #include "util.hpp"
 
-void levelOneSetup(HWND hwnd)
-{
-    paintBlueSkyBackground(hwnd);
-}
-
-void levelOneKeyHandler(HWND hwnd, int wparam)//pos moves forward, neg moves backwards
+void LevelKeyHandler(HWND hwnd, int wparam)//pos moves forward, neg moves backwards
 {
     if(wparam == CK_A)
     {
@@ -39,10 +34,4 @@ void levelOneKeyHandler(HWND hwnd, int wparam)//pos moves forward, neg moves bac
         paintCharacter(hwnd);
     }
 }
-
-
-void drawLevelOne(HWND hwnd)
-{
-
-}   
 

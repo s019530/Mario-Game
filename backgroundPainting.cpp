@@ -1,86 +1,31 @@
 #include "backgroundPainting.hpp"
 #include "util.hpp"
+#include "file_managment.hpp"
 
 HBRUSH skyBlue = CreateSolidBrush(RGB(68,243, 255));
 HBRUSH white = CreateSolidBrush(RGB(250,250,250));
 HBRUSH black = CreateSolidBrush(RGB(0,0,0));
 HBRUSH green = CreateSolidBrush(RGB(0, 250, 0));
 
-bool cloudGenerated = false;
+bool level_loaded = false;
 bool initialCharacter = false;
 
 const int char_right = (window_width / 2) + (char_width/2);
 const int char_left = (window_width / 2) - (char_width/2);
 
-RECT clouds[24];
+std::vector<RECT> clouds;
 
+std::vector<RECT> ground;
 
-RECT ground[10];
+//0 - clouds, 1 - ground
+std::vector<std::vector<RECT>*> objects_to_be_painted = {&clouds, &ground};
 
 RECT characterRect;
 
 int char_pos = 0;// 590 from the border
 int char_y_pos = 100;
 
-
-void generateGround()
-{
-    RECT rect;
-    for(int i = 0; i != (std::end(ground) - std::begin(ground)); i++)
-    {
-        int left = i * block_size;
-        int right = left + block_size;
-        int bottom = 800;
-        int top = 800 - generateNumber(70, 100);
-        SetRect(&rect, left, top, right, bottom);
-        ground[i] = rect;
-    }
-}
-
-void generateClouds()
-{   
-
-    int prev = 40;
-    for(int i = 0; i != (std::end(clouds) - std::begin(clouds)); i++)
-    {
-        if((i == 0) || (i % 2 == 0))//create base of new cloud
-        {
-            int right = prev + generateNumber(100, 140);
-            int top = generateNumber(20, 60);
-            int bottom = top + generateNumber(40, 60);
-            RECT rect;
-            SetRect(&rect, prev, top, right, bottom);
-            prev = right + 80;
-            clouds[i] = rect;
-            //std::cout << "Cloud " + std::to_string(i) + " generated" << std::endl;
-        }
-        else{
-            RECT temprect = clouds[i-1];
-
-            int fourth = (temprect.right - temprect.left)/8;
-            int left = fourth+temprect.left;
-            int right = temprect.right - fourth;
-
-            int top = temprect.top - 20;
-            int bottom = temprect.bottom + 20;
-            RECT rect;
-            SetRect(&rect, left, top, right, bottom);
-            clouds[i] = rect;
-        }
-
-        //std::cout << "Cloud " + std::to_string(i) + " generated" << std::endl;
-    }
-}
-
 void paintClouds(HWND hwnd){
-    
-    if(!cloudGenerated){
-        cloudGenerated = true;
-        generateClouds();
-        generateGround();
-        }
-    //std::cout << std::to_string(char_pos) << std::endl;
-
     InvalidateRect(hwnd, NULL, false);
 
     PAINTSTRUCT paints;
@@ -154,7 +99,6 @@ void paintGround(HWND hwnd)
 
             FillRect(paints.hdc, &temp, green);
         }
-        //std::cout << "ground painted" << std::endl;
     }
     EndPaint(hwnd, &paints);
 }
@@ -167,6 +111,11 @@ void paintBlueSkyBackground(HWND hwnd)
     PAINTSTRUCT paints;
 
     BeginPaint(hwnd, &paints);
+
+    if(!level_loaded){
+        load_file("levelone", &objects_to_be_painted);
+        level_loaded = true;
+    }
     
     RECT rect;
     //paint sky
@@ -236,7 +185,6 @@ void move_char(int i, type_of_movement movement_type)
         case(SET_POS):
         {
             char_y_pos = i;
-            std::cout << "sets position" << std::endl;
             break;
         }
     }
@@ -249,19 +197,15 @@ bool check_collison(type_of_collision collision_type)
         case (UNDER):
         {
             if(800 - char_y_pos >= 795){
-                std::cout << "dead" << std::endl;
                 move_char(0, SET_POS);
                 return true; // hit the floor
             }
-            std::cout << "checking under" << std::endl;
             for(RECT g : ground)
             {
                 if((g.left + char_pos <= char_left) && (g.right + char_pos >= char_right))
                 {
-                    std::cout << "rect found" << std::endl;
                     if((800 - char_y_pos) < g.top)
                     {
-                        std::cout << "False" << std::endl;
                         return false;//ground is foudn and you're above it
                     }
                     else{

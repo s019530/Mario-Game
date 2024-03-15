@@ -106,6 +106,10 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 LevelKeyHandler(hwnd, CK_D);
             }
+            else if(isKeyDown(CK_ONE))
+            {
+                LevelKeyHandler(hwnd, CK_ONE);
+            }
             else{
                 paintBlueSkyBackground(hwnd);
                 paintCharacter(hwnd);

@@ -14,9 +14,7 @@ const int char_right = (window_width / 2) + (char_width/2);
 const int char_left = (window_width / 2) - (char_width/2);
 
 std::vector<RECT> clouds;
-
 std::vector<RECT> ground;
-
 //0 - clouds, 1 - ground
 std::vector<std::vector<RECT>*> objects_to_be_painted = {&clouds, &ground};
 
@@ -140,7 +138,7 @@ void paintBlueSkyBackground(HWND hwnd)
 void paintCharacter(HWND hwnd)
 {
     //SetRect(&characterRect, 590, 725 - char_y_pos, 610, 800 - char_y_pos);
-    SetRect(&characterRect, char_left, 725 - char_y_pos, char_right, 800 - char_y_pos);
+    SetRect(&characterRect, char_left, 750 - char_y_pos, char_right, 800 - char_y_pos);
 
     InvalidateRect(hwnd, NULL, false);
 
@@ -162,7 +160,11 @@ void move_char(int i, type_of_movement movement_type)
     switch(movement_type)
     {
         case(WALK):
+
             char_pos = char_pos + i;
+            if(check_collison(SIDE)){
+                char_pos = char_pos - i;
+            }
             break;
         case(JUMP):
             char_y_pos += i;
@@ -182,9 +184,14 @@ void move_char(int i, type_of_movement movement_type)
             }
             break;
         }
-        case(SET_POS):
+        case(SET_POS_Y):
         {
             char_y_pos = i;
+            break;
+        }
+        case(SET_POS_X):
+        {
+            char_pos = i;
             break;
         }
     }
@@ -197,7 +204,7 @@ bool check_collison(type_of_collision collision_type)
         case (UNDER):
         {
             if(800 - char_y_pos >= 795){
-                move_char(0, SET_POS);
+                move_char(0, SET_POS_Y);
                 return true; // hit the floor
             }
             for(RECT g : ground)
@@ -206,15 +213,59 @@ bool check_collison(type_of_collision collision_type)
                 {
                     if((800 - char_y_pos) < g.top)
                     {
-                        return false;//ground is foudn and you're above it
+                        return false;//ground is found and you're above it
                     }
-                    else{
-                        move_char(800 - g.top, SET_POS);
+                    else if ((800 - char_y_pos) < g.top + 50){ //clips you back up if the bottom of the character is 50 units into the block other wise lets u fall
+                        move_char(800 - g.top, SET_POS_Y);
                         return true; //ground is found but ur on the ground
                     }
                 }
             }
             return false; //IF NO GROUND IS FOUND AT ALL
+        }
+        case (SIDE):
+        {
+            for(RECT g : ground)
+            {
+                if(((g.left+char_pos) <= char_right) && ((g.right+char_pos) >= char_right))
+                {
+                    int mid = 800 - (char_y_pos + (char_height/2));
+                    std::cout << "block found" << std::endl;
+                    std::cout << "left :" + std::to_string(g.left) + " right : " + std::to_string(g.right) + "char pos " + std::to_string(char_pos) + " MID " + std::to_string(mid) << std::endl; 
+                    if((mid > g.top) && (mid < g.bottom)) {
+                        if(!check_collison(UNDER))
+                        {
+                            return false;
+                        }
+                        if(g.top > (800 - char_y_pos)){
+                            return false;
+                        }
+                        std::cout << "blocked char right" << std::endl;
+    
+                        return true;
+                    }
+                }
+                if(((g.right+char_pos) >= char_left) && ((g.left+char_pos) <= char_left))
+                {
+                    int mid = 800 - (char_y_pos + (char_height/2));
+                    std::cout << "block found" << std::endl;
+                    std::cout << "left :" + std::to_string(g.left) + " right : " + std::to_string(g.right) + "char pos " + std::to_string(char_pos) + " MID " + std::to_string(mid) << std::endl; 
+
+                    if((mid > g.top) && (mid < g.bottom)) {
+                        if(!check_collison(UNDER))
+                        {
+                            return false;
+                        }
+                        if(g.top > (800 - char_y_pos)){
+                            return false;
+                        }
+                        std::cout << "blocked char left" << std::endl;
+    
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
     return true;
@@ -236,4 +287,13 @@ void jumpControl(bool skip_jump)
         Sleep(10);
     }
     isJumping = false;
+}
+
+
+void restartGame()
+{
+    level_loaded = false;
+    initialCharacter = false;
+    char_pos = 0;
+    char_y_pos = 100;
 }

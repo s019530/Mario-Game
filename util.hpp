@@ -7,7 +7,8 @@
 typedef enum CUSTOM_KEY{
     CK_A = 65,
     CK_W = 87,
-    CK_D = 68
+    CK_D = 68,
+    CK_ONE = 49
 }CUSTOM_KEY;
 
 bool isKeyDown(CUSTOM_KEY key);

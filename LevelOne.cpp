@@ -6,32 +6,35 @@ void LevelKeyHandler(HWND hwnd, int wparam)//pos moves forward, neg moves backwa
 {
     if(wparam == CK_A)
     {
-        move_char(10, WALK);
+        move_char(char_move_speed, WALK);
         paintBlueSkyBackground(hwnd);
         paintCharacter(hwnd);
     }
     if(wparam == CK_D)
     {
-        std::cout << "d" << std::endl;
-        move_char(-10, WALK);
+        move_char(char_move_speed * -1, WALK);
         paintBlueSkyBackground(hwnd);
         paintCharacter(hwnd);
     }
     if(wparam == CK_W)
     {
-        std::cout << "w" << std::endl;
         move_char(0, JUMP_START);
 
         if(isKeyDown(CK_D)){
-            move_char(-10, WALK);
+            move_char(char_move_speed * -1, WALK);
         }
         else if(isKeyDown(CK_A))
         {
-            move_char(10, WALK);
+            move_char(char_move_speed, WALK);
         }
 
         paintBlueSkyBackground(hwnd);
         paintCharacter(hwnd);
+    }
+    if(wparam == CK_ONE)
+    {
+        restartGame();
+        std::cout << "game restart";
     }
 }
 

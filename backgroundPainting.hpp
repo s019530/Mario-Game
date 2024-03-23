@@ -3,6 +3,7 @@
 #include <winuser.h>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include <thread>
 
@@ -30,9 +31,9 @@ typedef enum type_of_collision{
     ALL
 }type_of_collision;
 
-void paintGround(HWND hwnd);
+void initLevel();
 
-void paintClouds(HWND hwnd);
+void paintAllObjects(HWND hwnd);
 
 void paintBlueSkyBackground(HWND hwnd);
 
@@ -45,3 +46,5 @@ bool check_collison(type_of_collision collision_type);
 void jumpControl(bool skip_jump);
 
 void restartGame();
+
+void mouseButton(HWND hwnd);

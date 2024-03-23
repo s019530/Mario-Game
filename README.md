@@ -10,3 +10,13 @@ v1.2 Added some collision support for the ground, addded free falling and stuff 
 v1.3 cleaned up some code, added file stuff, now reads levels from files
 
 v1.4 added side collision support. Main problem with this is that you won't go up completely against the wall a lot of the time before getting blocked due to the fact that if I allowed that it would cause clipped because of issues with how the detection for if you're standing on the ground or not works. it would need to be changed somehow to let you stand on part of a block, writing this now I think what I could do is cut the character in half and if half of the character is on a block then allow them to stand there... Maybe in another version when I have the motivation to fix this kind of issue. I also changed the hight of the character to 50 units
+
+v1.5 added new kind of objects - brown blocks. combined paint functions to eliminate redundency.
+
+v1.6 fixed jump bug, still working on other blocks not working, need to redesign side collisions entirely i think, if brown blocks work then the ground doesn't, if the ground works then the blocks doesn't. 
+
+
+CURRET BUGS:
+can't walk fully up to blocks / ground - v1.4
+can't interact with brown blocks - v1.5 | maybe another block is getting detected first or some shit?
+if you hold the jump button you keep jumping, basically bad detection on when the jump ends - v1.5 | before ending the jump check if in the air or some shit | fixed v1.6

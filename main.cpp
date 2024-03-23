@@ -118,6 +118,9 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
+        case WM_LBUTTONDOWN:
+            mouseButton(hwnd);
+            break;
         case WM_DESTROY:
             PostQuitMessage(0);
             break;

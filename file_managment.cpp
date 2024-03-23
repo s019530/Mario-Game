@@ -69,7 +69,9 @@ void save_file(std::string path, std::vector<std::vector<RECT>*> objects){
                 case(GROUND):
                     file << "GROUND,";
                     break;
-
+                case(BROWN_BLOCK):
+                    file<<"BROWNBLOCK,";
+                    break;
             }
             file << std::to_string(c->at(i).bottom);
             file << ",";
@@ -104,6 +106,10 @@ void load_file(std::string path, std::vector<std::vector<RECT>*>* objects){
         }
         else if(temp[0] == "GROUND"){
             objects->at(GROUND)->push_back(rect);
+        }
+        else if(temp[0] == "BROWNBLOCK")
+        {
+            objects->at(BROWN_BLOCK)->push_back(rect);
         }
     }
 }

@@ -6,6 +6,7 @@ HBRUSH skyBlue = CreateSolidBrush(RGB(68,243, 255));
 HBRUSH white = CreateSolidBrush(RGB(250,250,250));
 HBRUSH black = CreateSolidBrush(RGB(0,0,0));
 HBRUSH green = CreateSolidBrush(RGB(0, 250, 0));
+HBRUSH brown = CreateSolidBrush(RGB(150,75,0));
 
 bool level_loaded = false;
 bool initialCharacter = false;
@@ -15,95 +16,119 @@ const int char_left = (window_width / 2) - (char_width/2);
 
 std::vector<RECT> clouds;
 std::vector<RECT> ground;
+std::vector<RECT> brown_blocks;
+std::vector<RECT> blocks_cache;
+
 //0 - clouds, 1 - ground
-std::vector<std::vector<RECT>*> objects_to_be_painted = {&clouds, &ground};
+std::vector<std::vector<RECT>*> objects_to_be_painted = {&clouds, &ground, &brown_blocks};
+
+std::vector<RECT> under_check;//things that need to be checked for collision under
+std::vector<RECT> side_check;//things that need to be checked for collision to the side
 
 RECT characterRect;
 
 int char_pos = 0;// 590 from the border
 int char_y_pos = 100;
 
-void paintClouds(HWND hwnd){
-    InvalidateRect(hwnd, NULL, false);
 
-    PAINTSTRUCT paints;
+void initLevel()
+{
+    load_file("levelone", &objects_to_be_painted);
+    level_loaded = true;
+    copy(ground.begin(), ground.end(), std::back_inserter(under_check));
+    copy(brown_blocks.begin(), brown_blocks.end(), std::back_inserter(under_check));
 
-    BeginPaint(hwnd, &paints);
+    //copy(ground.begin(), ground.end(), std::back_inserter(side_check));
+    copy(brown_blocks.begin(), brown_blocks.end(), std::back_inserter(side_check));
+    copy(ground.begin(), ground.end(), std::back_inserter(side_check));
 
-    for(int i = 0; i != (std::end(clouds) - std::begin(clouds)); i++)
-    {
-        if((clouds[i].right+char_pos < 0) || (clouds[i].left+char_pos > 1200))
-        {   
-        }
-        else if((clouds[i].left+char_pos < 0) && (clouds[i].right + char_pos > 0)) // left border
-        {
-            RECT temp = clouds[i];
-            
-            SetRect(&temp, 0, clouds[i].top, clouds[i].right + char_pos, clouds[i].bottom);
+    std::cout << std::to_string(side_check.size()) << std::endl;
+    std::cout << std::to_string(ground.size()) << std::endl;
 
-            FillRect(paints.hdc, &temp, white);
-        }
-        else if((clouds[i].right + char_pos > 1200) && (clouds[i].left + char_pos < 1200))//right border
-        {
-
-            RECT temp = clouds[i];
-            
-            SetRect(&temp, clouds[i].left+char_pos, clouds[i].top, 1200, clouds[i].bottom);
-
-            FillRect(paints.hdc, &temp, white);
-        }
-        else
-        {
-            RECT rect;
-            rect = clouds[i];
-            rect.right = rect.right + char_pos;
-            rect.left = rect.left + char_pos;
-
-            FillRect(paints.hdc, &rect, white);
-        }
-    }
-
-    EndPaint(hwnd, &paints);
 }
 
-void paintGround(HWND hwnd)
+void paintAllObjects(HWND hwnd)
 {
-
     InvalidateRect(hwnd, NULL, false);
+
     PAINTSTRUCT paints;
+
     BeginPaint(hwnd, &paints);
 
-    for(RECT rect : ground)
-    {
-        if((rect.right+char_pos < 0) || (rect.left+char_pos > 1200))
-        {}
-        else if((rect.left+char_pos < 0) && (rect.right + char_pos) > 0) // left border
-        {
-            RECT temp = rect;
-            SetRect(&temp, 0, temp.top, temp.right+char_pos, temp.bottom);
-            FillRect(paints.hdc, &temp, green);
-        }
-        else if((rect.right + char_pos > 1200) && (rect.left + char_pos < 1200)) //right border
-        {
-            RECT temp = rect;
-            SetRect(&temp, rect.left+char_pos, rect.top, 1200, rect.bottom);
-            FillRect(paints.hdc, &temp, green);
-        }
-        else
-        {
-            RECT temp = rect;
-            temp.right = temp.right + char_pos;
-            temp.left = temp.left + char_pos;
+    HBRUSH *temp_color = &green;
 
-            FillRect(paints.hdc, &temp, green);
+    int count = 0;
+
+    for(auto elements : objects_to_be_painted)
+    {
+        switch(count)
+        {
+            case(0)://clouds
+                temp_color = &white;
+                break;
+            case(1)://ground
+                temp_color = &green;
+                break;
+            case(2)://brown block
+                temp_color = &brown;
+                break;
         }
+        blocks_cache.clear();
+
+        for(int i = 0; i != elements->size(); i++)
+        {
+            if((elements->at(i).right+char_pos < 0) || elements->at(i).left+char_pos > 1200){}
+            else if((elements->at(i).left+char_pos < 0) && (elements->at(i).right + char_pos > 0)) // left border
+            {
+                RECT temp = elements->at(i);
+                SetRect(&temp, 0, elements->at(i).top, elements->at(i).right + char_pos, elements->at(i).bottom);
+                FillRect(paints.hdc, &temp, *temp_color);
+
+
+
+            }
+            else if((elements->at(i).right + char_pos > 1200) && (elements->at(i).left + char_pos < 1200))//right border
+            {
+                RECT temp = elements->at(i);
+                SetRect(&temp, elements->at(i).left+char_pos, elements->at(i).top, 1200, elements->at(i).bottom);
+                FillRect(paints.hdc, &temp, *temp_color);
+
+
+
+            }
+            else
+            {
+                RECT rect;
+                rect = elements->at(i);
+                rect.right = rect.right + char_pos;
+                rect.left = rect.left + char_pos;
+                FillRect(paints.hdc, &rect, *temp_color);
+
+            }
+            RECT rect = elements->at(i);
+
+            for(RECT g : side_check) 
+            {
+                if(
+                    (g.top == rect.top) && 
+                    (g.bottom == rect.bottom) &&
+                    (g.left == rect.left) &&
+                    (g.right == rect.right)
+                )
+                {
+                    blocks_cache.push_back(rect);
+                }
+            }
+        }
+        count = count + 1;
+        //std::cout << std::to_string(blocks_cache.size())<< std::endl;
     }
+    DeleteObject(temp_color);
     EndPaint(hwnd, &paints);
 }
 
 void paintBlueSkyBackground(HWND hwnd)
 {
-
     InvalidateRect(hwnd, NULL, false);
 
     PAINTSTRUCT paints;
@@ -111,19 +136,13 @@ void paintBlueSkyBackground(HWND hwnd)
     BeginPaint(hwnd, &paints);
 
     if(!level_loaded){
-        load_file("levelone", &objects_to_be_painted);
-        level_loaded = true;
+        initLevel();
     }
     
     RECT rect;
-    //paint sky
-    FillRect(paints.hdc, &paints.rcPaint, skyBlue);
+    FillRect(paints.hdc, &paints.rcPaint, skyBlue);//paint sky
 
-    //paint clouds;
-    paintClouds(hwnd);
-
-    //paint ground;
-    paintGround(hwnd);
+    paintAllObjects(hwnd); //paints all the objects
 
     //paint char;
     if(initialCharacter == false) {
@@ -137,7 +156,6 @@ void paintBlueSkyBackground(HWND hwnd)
 
 void paintCharacter(HWND hwnd)
 {
-    //SetRect(&characterRect, 590, 725 - char_y_pos, 610, 800 - char_y_pos);
     SetRect(&characterRect, char_left, 750 - char_y_pos, char_right, 800 - char_y_pos);
 
     InvalidateRect(hwnd, NULL, false);
@@ -199,6 +217,7 @@ void move_char(int i, type_of_movement movement_type)
 
 bool check_collison(type_of_collision collision_type)
 {
+    bool buffered_output = true;
     //check for ground position
     switch(collision_type) {
         case (UNDER):
@@ -207,7 +226,7 @@ bool check_collison(type_of_collision collision_type)
                 move_char(0, SET_POS_Y);
                 return true; // hit the floor
             }
-            for(RECT g : ground)
+            for(RECT g : under_check)
             {
                 if((g.left + char_pos <= char_left) && (g.right + char_pos >= char_right))
                 {
@@ -225,43 +244,58 @@ bool check_collison(type_of_collision collision_type)
         }
         case (SIDE):
         {
-            for(RECT g : ground)
+            for(RECT g : side_check)
             {
-                if(((g.left+char_pos) <= char_right) && ((g.right+char_pos) >= char_right))
+                std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
+                std::cout << "left " + std::to_string(g.left + char_pos) + " right " + std::to_string(g.right + char_pos) << std::endl;
+
+                std::cout << "char _ right " + std::to_string(char_right);
+                std::cout << "char _ left " + std::to_string(char_left);
+                std::cout << "\n\n\n\n\n";
+                if(((g.left+char_pos) >= char_right) && ((g.right+char_pos) <= char_right)) // inequality flipped
                 {
                     int mid = 800 - (char_y_pos + (char_height/2));
-                    std::cout << "block found" << std::endl;
-                    std::cout << "left :" + std::to_string(g.left) + " right : " + std::to_string(g.right) + "char pos " + std::to_string(char_pos) + " MID " + std::to_string(mid) << std::endl; 
+                    std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
+                    std::cout << "mid " + std::to_string(mid) + "\n\n\n";
                     if((mid > g.top) && (mid < g.bottom)) {
+                        std::cout << "block found" << std::endl;
                         if(!check_collison(UNDER))
                         {
-                            return false;
+                            buffered_output = false;
+                            //return false;
                         }
                         if(g.top > (800 - char_y_pos)){
-                            return false;
+                            buffered_output = false;
+                            //return false;
+                        }                        
+                        if(buffered_output){
+                            std::cout << "blocked char right" << std::endl;
+                            return true;
                         }
-                        std::cout << "blocked char right" << std::endl;
-    
-                        return true;
+                        //return true;
                     }
                 }
-                if(((g.right+char_pos) >= char_left) && ((g.left+char_pos) <= char_left))
+                if(((g.right+char_pos) <= char_left) && ((g.left+char_pos) >= char_left)) //inequality flipped
                 {
                     int mid = 800 - (char_y_pos + (char_height/2));
-                    std::cout << "block found" << std::endl;
-                    std::cout << "left :" + std::to_string(g.left) + " right : " + std::to_string(g.right) + "char pos " + std::to_string(char_pos) + " MID " + std::to_string(mid) << std::endl; 
-
+                    std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
+                    std::cout << "mid " + std::to_string(mid) + "\n\n\n";
                     if((mid > g.top) && (mid < g.bottom)) {
+                        std::cout << "block found" << std::endl;
                         if(!check_collison(UNDER))
                         {
-                            return false;
+                            buffered_output = false;
+                            //return false;
                         }
                         if(g.top > (800 - char_y_pos)){
-                            return false;
+                            buffered_output = false;
+                            //return false;
                         }
-                        std::cout << "blocked char left" << std::endl;
-    
-                        return true;
+                        if(buffered_output){
+                            std::cout << "blocked char left" << std::endl;
+                            return true;
+                        }
+                        //return true;
                     }
                 }
             }
@@ -280,15 +314,14 @@ void jumpControl(bool skip_jump)
         move_char(10, JUMP);
         Sleep(10);
     }
-    for(int i = 0; i != 15; i++)
+
+    while(check_collison(UNDER) == false)
     {
         move_char(-10, JUMP);
-        if(check_collison(UNDER) == true){break;}
         Sleep(10);
     }
     isJumping = false;
 }
-
 
 void restartGame()
 {
@@ -296,4 +329,13 @@ void restartGame()
     initialCharacter = false;
     char_pos = 0;
     char_y_pos = 100;
+}
+
+void mouseButton(HWND hwnd)
+{
+    std::cout << "mouse";
+    POINT pt;
+    GetCursorPos(&pt);
+    ScreenToClient(hwnd, &pt);
+    std::cout << "x : " + std::to_string(pt.x - char_pos) + " y: " + std::to_string(pt.y) << std::endl;
 }

@@ -6,7 +6,8 @@
 
 typedef enum type_of_object{
     CLOUD,
-    GROUND
+    GROUND,
+    BROWN_BLOCK
 }type_of_object;
 
 

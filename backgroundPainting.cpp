@@ -217,7 +217,6 @@ void move_char(int i, type_of_movement movement_type)
 
 bool check_collison(type_of_collision collision_type)
 {
-    bool buffered_output = true;
     //check for ground position
     switch(collision_type) {
         case (UNDER):
@@ -228,81 +227,60 @@ bool check_collison(type_of_collision collision_type)
             }
             for(RECT g : under_check)
             {
+                if((800 - char_y_pos) < g.top)
+                {
+                    continue;//ground is found and you're above it
+                }
+
                 if((g.left + char_pos <= char_left) && (g.right + char_pos >= char_right))
                 {
-                    if((800 - char_y_pos) < g.top)
-                    {
-                        return false;//ground is found and you're above it
-                    }
-                    else if ((800 - char_y_pos) < g.top + 50){ //clips you back up if the bottom of the character is 50 units into the block other wise lets u fall
+                    if (((800 - char_y_pos) < g.top + 50) && ((800 - char_y_pos) >= g.top) ){ //clips you back up if the bottom of the character is 50 units into the block other wise lets u fall
                         move_char(800 - g.top, SET_POS_Y);
+                        std::cout << "returning true" << std::endl;
                         return true; //ground is found but ur on the ground
                     }
+
                 }
             }
             return false; //IF NO GROUND IS FOUND AT ALL
         }
         case (SIDE):
         {
+            bool output = true;
             for(RECT g : side_check)
             {
-                std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
-                std::cout << "left " + std::to_string(g.left + char_pos) + " right " + std::to_string(g.right + char_pos) << std::endl;
+                int mid = 800 - (char_y_pos + (char_height/2));
 
-                std::cout << "char _ right " + std::to_string(char_right);
-                std::cout << "char _ left " + std::to_string(char_left);
-                std::cout << "\n\n\n\n\n";
-                if(((g.left+char_pos) >= char_right) && ((g.right+char_pos) <= char_right)) // inequality flipped
+                if((g.top < mid) && (g.bottom > mid))
                 {
-                    int mid = 800 - (char_y_pos + (char_height/2));
-                    std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
-                    std::cout << "mid " + std::to_string(mid) + "\n\n\n";
-                    if((mid > g.top) && (mid < g.bottom)) {
-                        std::cout << "block found" << std::endl;
-                        if(!check_collison(UNDER))
-                        {
-                            buffered_output = false;
-                            //return false;
-                        }
+
+                    if((g.right + char_pos >= char_left) && (g.right + char_pos <= char_right))
+                    {
+                        check_collison(UNDER);//helps with clipping
                         if(g.top > (800 - char_y_pos)){
-                            buffered_output = false;
-                            //return false;
-                        }                        
-                        if(buffered_output){
-                            std::cout << "blocked char right" << std::endl;
+                            continue;
+                        }
+                        else{
                             return true;
                         }
-                        //return true;
+                        
                     }
-                }
-                if(((g.right+char_pos) <= char_left) && ((g.left+char_pos) >= char_left)) //inequality flipped
-                {
-                    int mid = 800 - (char_y_pos + (char_height/2));
-                    std::cout << "top " + std::to_string(g.top) + " bot " + std::to_string(g.bottom) << std::endl;
-                    std::cout << "mid " + std::to_string(mid) + "\n\n\n";
-                    if((mid > g.top) && (mid < g.bottom)) {
-                        std::cout << "block found" << std::endl;
-                        if(!check_collison(UNDER))
-                        {
-                            buffered_output = false;
-                            //return false;
-                        }
+                    else if((g.left + char_pos <= char_right) && (g.left + char_pos >= char_left))
+                    {
+                        check_collison(UNDER); //helps with clipping
                         if(g.top > (800 - char_y_pos)){
-                            buffered_output = false;
-                            //return false;
+                            continue;
                         }
-                        if(buffered_output){
-                            std::cout << "blocked char left" << std::endl;
+                        else{
                             return true;
                         }
-                        //return true;
                     }
                 }
             }
             return false;
         }
     }
-    return true;
+    return false;
 }
 
 void jumpControl(bool skip_jump)

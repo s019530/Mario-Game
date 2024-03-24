@@ -56,7 +56,7 @@ void save_file(std::string path, std::vector<std::vector<RECT>*> objects){
 
 
     //CLOUDS, GROUND
-    //order - BOTTOM, TOP, LEFT, RIGHT
+    //order - BOTTOM, TOP, RIGHT, LEFT
     int x = 0;
     for(auto c : objects){
         for(int i = 0; i != c->size(); i++){

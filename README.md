@@ -21,5 +21,7 @@ v1.7 fixed the bug where you can't interact with other kind of blocks.
 
 CURRET BUGS:
 can't walk fully up to blocks / ground - v1.4
+
 can't interact with brown blocks - v1.5 | maybe another block is getting detected first or some shit? | v1.7
+
 if you hold the jump button you keep jumping, basically bad detection on when the jump ends - v1.5 | before ending the jump check if in the air or some shit | fixed v1.6

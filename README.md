@@ -1,5 +1,7 @@
 file convention: TYPE, TOP, BOTTOM, RIGHT, LEFT
 
+PATCHES
+
 v1. Base game.
 
 
@@ -19,7 +21,8 @@ v1.6 fixed jump bug, still working on other blocks not working, need to redesign
 
 v1.7 fixed the bug where you can't interact with other kind of blocks.
 
-CURRET BUGS:
+BUGS
+
 can't walk fully up to blocks / ground - v1.4
 
 can't interact with brown blocks - v1.5 | maybe another block is getting detected first or some shit? | v1.7

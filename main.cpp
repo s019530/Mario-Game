@@ -2,24 +2,15 @@
 #include <windows.h>
 #include <winuser.h>
 
-#include "LevelOne.hpp"
-#include "backgroundPainting.hpp"
 #include "util.hpp"
+#include "MainMenu.hpp"
+#include "MouseEvents.hpp"
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-
-
-typedef enum gameState{
-    MAINMENU, 
-    LEVELONE
-}gameState;
-
-int state_of_game;
-
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
-    state_of_game = LEVELONE;
+    state_of_game = MAINMENU;
 
 
     LPCSTR class_name = "Mario Rip Off";
@@ -72,54 +63,39 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         case WM_SIZE:
             {
-                switch(state_of_game)
-                {
-                    case(LEVELONE):
-                        {
-                            LevelKeyHandler(hwnd, 0);
-                            break;
-                        }
-                }   
-
                 RECT rect;
                 GetWindowRect(hwnd, &rect);
                 SetWindowPos(hwnd, 0, rect.left, rect.top, 1200, 800, 0);
                 break;
             }
             break;
-
         case WM_CREATE:
             SetTimer(hwnd, 0, 10, (TIMERPROC) NULL);
             break;
-        
-
+        case WM_MOUSEMOVE:
+        {
+            mouse_move(hwnd);
+            break;
+        }
         case WM_TIMER:
-            if(isKeyDown(CK_W))
-            {
-                LevelKeyHandler(hwnd, CK_W);
-            }
-            else if(isKeyDown(CK_A))
-            {
-                LevelKeyHandler(hwnd, CK_A);
-            }
-            else if(isKeyDown(CK_D))
-            {
-                LevelKeyHandler(hwnd, CK_D);
-            }
-            else if(isKeyDown(CK_ONE))
-            {
-                LevelKeyHandler(hwnd, CK_ONE);
-            }
-            else{
-                paintBlueSkyBackground(hwnd);
-                paintCharacter(hwnd);
+            switch(state_of_game){
+                case(MAINMENU):
+                {
+                    paint_mainmenu(hwnd, true);
+                    break;
+                }
+                case(LOADED_LEVEL):
+                {   
+                    current_level->paintEverything();
+                    break;
+                }
             }
             break;
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
         case WM_LBUTTONDOWN:
-            mouseButton(hwnd);
+            mouse_click(hwnd);
             break;
         case WM_DESTROY:
             PostQuitMessage(0);

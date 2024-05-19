@@ -23,6 +23,8 @@ v1.7 fixed the bug where you can't interact with other kind of blocks.
 
 v2.0 Redid the structure of the project, created a main menu and starting work on creating an ingame menu
 
+v2.1 Finished the escape menu.
+
 BUGS
 
 can't walk fully up to blocks / ground - v1.4

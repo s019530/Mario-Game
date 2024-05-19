@@ -269,22 +269,5 @@ void LevelLoader::jumpControl(bool skip_jump)
 }
 
 void LevelLoader::paintMenu(){
-    InvalidateRect(hwnd, NULL, false);
-
-    PAINTSTRUCT paints;
-
-    BeginPaint(hwnd, &paints);
-
-    RECT rect;
-    rect = esc_menu_objects[0];
-
-    FillRect(paints.hdc, &rect, white);
-
-    /*for(int i = 0; i != std::size(esc_menu_words); i++)
-    {
-        RECT rect = esc_menu_objects[i + 1];
-        DrawText(paints.hdc, esc_menu_words[i].c_str(), std::size(esc_menu_words[i]), &esc_menu_objects[i+1], DT_CENTER); 
-    }*/
-
-    EndPaint(hwnd, &paints);
+    paint_escmenu(hwnd);
 }

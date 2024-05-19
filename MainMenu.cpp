@@ -80,3 +80,36 @@ void paint_mainmenu(HWND hwnd, bool isMainMenu){
     
     EndPaint(hwnd, &paints);
 }
+
+void paint_escmenu(HWND hwnd)
+{
+
+    escMenu == true ? escMenu = false : escMenu = true;
+
+    InvalidateRect(hwnd, NULL, false);
+
+    PAINTSTRUCT paints;
+
+    BeginPaint(hwnd, &paints);
+
+    RECT rect;
+    rect = esc_menu_objects[0];
+
+    FillRect(paints.hdc, &rect, white);
+
+    
+    SetBkMode(paints.hdc, TRANSPARENT);
+    for(int i = 0; i != std::size(esc_menu_words); i++) 
+    {
+        if(word_highlighted == i+1){//+1 BECAUSE THE ORDERING FOR THE WORDS ANDTHE BOXES IS ATTATCHED TO IS +1
+            SelectObject(paints.hdc, escmenuFontBig);
+        }
+        else{
+            SelectObject(paints.hdc, escmenuFontNormal);
+        }
+        RECT rect = esc_menu_objects[i+1];
+        DrawText(paints.hdc, esc_menu_words[i].c_str(), std::size(esc_menu_words[i]), &esc_menu_objects[i+1], DT_CENTER); 
+    }
+
+    EndPaint(hwnd, &paints);
+}

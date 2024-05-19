@@ -18,5 +18,6 @@ void mouse_click(HWND hwnd);
 
 void load_level_button(HWND hwnd);
 
+void kill_level_buton(HWND hwnd);
 
 #endif

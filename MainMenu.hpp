@@ -20,6 +20,8 @@ void init_mainmenu();
 
 void paint_mainmenu(HWND hwnd, bool isMainMenu);
 
+void paint_escmenu(HWND hwnd);
+
 
 
 

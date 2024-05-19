@@ -11,6 +11,9 @@
 extern HFONT menuFontNormal;
 extern HFONT menuFontBig;
 
+extern HFONT escmenuFontBig;
+extern HFONT escmenuFontNormal;
+
 extern HBRUSH skyBlue;
 extern HBRUSH white;
 extern HBRUSH black;
@@ -19,6 +22,8 @@ extern HBRUSH brown;
 
 extern int state_of_game;
 extern int previous_state_of_game;
+
+extern bool escMenu;
 
 typedef enum gameState{
     MAINMENU, 

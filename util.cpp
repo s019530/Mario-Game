@@ -10,8 +10,13 @@ HBRUSH brown = CreateSolidBrush(RGB(150,75,0));
 HFONT menuFontNormal = CreateFont(50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
 HFONT menuFontBig = CreateFont(60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
 
+HFONT escmenuFontBig = CreateFont(35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
+HFONT escmenuFontNormal = CreateFont(30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
+
 int state_of_game = MAINMENU;
 int previous_state_of_game = MAINMENU;
+
+bool escMenu = false;
 
 
 bool isKeyDown(CUSTOM_KEY key){

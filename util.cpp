@@ -73,3 +73,14 @@ bool mouseInBox(RECT rect, POINT pt){
     }
     return false;
 }
+
+RECT pointsToRect(POINT one, POINT two){
+    RECT rect;
+
+    rect.left = (one.x < two.x) ? one.x : two.x;
+    rect.right = (one.x > two.x) ? one.x : two.x;
+    rect.top = (one.y < two.y) ? one.y : two.y;
+    rect.bottom = (one.y > two.y) ? one.y : two.y;
+
+    return rect;
+}

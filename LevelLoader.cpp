@@ -25,7 +25,7 @@ void LevelLoader::paintEverything(){
 
 void LevelLoader::buttonHandler(){
     
-
+    
     if(isKeyDown(CK_ESC))
     {
         if(esc_menu){

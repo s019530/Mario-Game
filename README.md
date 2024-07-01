@@ -25,6 +25,8 @@ v2.0 Redid the structure of the project, created a main menu and starting work o
 
 v2.1 Finished the escape menu.
 
+v2.2 Started work on level creation.
+
 BUGS
 
 can't walk fully up to blocks / ground - v1.4
@@ -32,3 +34,5 @@ can't walk fully up to blocks / ground - v1.4
 can't interact with brown blocks - v1.5 | maybe another block is getting detected first or some shit? | v1.7
 
 if you hold the jump button you keep jumping, basically bad detection on when the jump ends - v1.5 | before ending the jump check if in the air or some shit | fixed v1.6
+
+for headache reasons, the code for mouse movements is being commented out because it's causing the program to crash on startup sometimes and not others, something i'll investigate later.

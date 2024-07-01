@@ -52,4 +52,6 @@ RECT createRectUsingCords(RECT rect, int size_width, int size_height);
 
 bool mouseInBox(RECT rect, POINT pt);
 
+RECT pointsToRect(POINT one, POINT two);
+
 #endif

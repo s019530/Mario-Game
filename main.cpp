@@ -89,6 +89,11 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                     current_level->paintEverything();
                     break;
                 }
+                case(CREATE_LEVEL):
+                {
+                    current_create_level->paintEverything();
+                    break;
+                }
             }
             break;
         case WM_CLOSE:

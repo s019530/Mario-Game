@@ -1,6 +1,7 @@
 #include "MouseEvents.hpp"
 
 LevelLoader *current_level = nullptr;
+CreateLevel *current_create_level = nullptr;
 
 void mouse_move(HWND hwnd){
 
@@ -10,7 +11,7 @@ void mouse_move(HWND hwnd){
 
     word_highlighted = 0;
 
-    switch(state_of_game){
+    /*switch(state_of_game){
 
         case(MAINMENU):
         {
@@ -33,7 +34,7 @@ void mouse_move(HWND hwnd){
             }
             break;
         }
-    }
+    }*/
 
 }
 
@@ -65,7 +66,7 @@ void mouse_click(HWND hwnd){
                     }
                     case(2)://CREAT LEVEL
                     {
-                        std::cout << "create level 2" << std::endl;
+                        load_create_level_button(hwnd);
                         break;
                     }
                 }
@@ -93,6 +94,11 @@ void mouse_click(HWND hwnd){
                     }
                 }
             }
+        case(CREATE_LEVEL):
+        {
+            current_create_level->mousePress();
+            break;
+        }
     }
 }
 
@@ -100,6 +106,11 @@ void load_level_button(HWND hwnd){
     std::cout << "load level" << std::endl;
     LevelLoader *level = new LevelLoader(hwnd);
     current_level = level;
+}
+
+void load_create_level_button(HWND hwnd){
+    CreateLevel *level = new CreateLevel(hwnd);
+    current_create_level = level;
 }
 
 void kill_level_buton(HWND hwnd){

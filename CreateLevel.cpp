@@ -1,5 +1,5 @@
 #include "CreateLevel.hpp"
-
+#include "MouseEvents.hpp"
 
 CreateLevel::CreateLevel(HWND hwnd){
     std::cout << "create level" << std::endl;
@@ -11,8 +11,7 @@ CreateLevel::CreateLevel(HWND hwnd){
 
 void CreateLevel::paintEverything(){
     buttonHandler();
-    if(selected_menu == true){
-        //paint_selected_rectangle_menu();
+    if(selected_menu == true || esc_menu == true){
         return;
     }
     InvalidateRect(hwnd, NULL, false);
@@ -129,7 +128,6 @@ void CreateLevel::Create_Selected_Box_Menu(){
 
 }
 
-
 void CreateLevel::paint_selected_rectangle_menu(){
     PAINTSTRUCT paints;
     InvalidateRect(hwnd, NULL, false);
@@ -152,6 +150,29 @@ void CreateLevel::paint_selected_rectangle_menu(){
 
 }
 
+void CreateLevel::paint_esc_menu(){
+    InvalidateRect(hwnd, NULL, false);
+
+    PAINTSTRUCT paints;
+
+    BeginPaint(hwnd, &paints);
+
+    createlevel_esc_menu_objects.at(0);
+
+    FillRect(paints.hdc, &createlevel_esc_menu_objects.at(0), gray);
+
+    std::string back_to_main_menu = "Main Menu";
+    std::string save = "save";
+
+    SelectObject(paints.hdc, menuFontNormal);
+    SetBkMode(paints.hdc, TRANSPARENT);
+
+    DrawText(paints.hdc, back_to_main_menu.c_str(), std::size(back_to_main_menu), &createlevel_esc_menu_objects.at(1), DT_CENTER);
+    DrawText(paints.hdc, save.c_str(), std::size(save), &createlevel_esc_menu_objects.at(2), DT_CENTER);
+
+    EndPaint(hwnd, &paints);
+}
+
 void CreateLevel::mousePress(){
 
     POINT pt;
@@ -160,17 +181,16 @@ void CreateLevel::mousePress(){
     pt.x = pt.x - char_pos;
     
     if(selected_menu == true) {
+        pt.x += char_pos;
         for(int i = 1; i != selected_box_menu_objects.size(); i++){
             if(mouseInBox(selected_box_menu_objects.at(i), pt)){
                 selected_menu = false;
                 switch(i){
                     case(1):
-                        std::cout << "block 1 " << std::endl;
                         skyBlue_blocks.push_back(saved_selected_rect);
                         return;
                     case(2):
                         white_blocks.push_back(saved_selected_rect);
-                        std::cout << "block 2" << std::endl;
                         return;
                     case(3):
                         green_blocks.push_back(saved_selected_rect);
@@ -194,7 +214,25 @@ void CreateLevel::mousePress(){
         }
     }
 
-    if(selected_menu){return;}
+    if(esc_menu){
+        pt.x += char_pos;
+        for(int i = 1; i != createlevel_esc_menu_objects.size(); i++){
+            if(mouseInBox(createlevel_esc_menu_objects.at(i), pt)){
+                switch(i){
+                    case(1):
+                        std::cout << "case 1";
+                        kill_create_level_button(hwnd);
+                        break;
+                    case(2):
+                        //SAVE LEVEL
+                        std::cout << "case 2";
+                        break;
+                }
+            }
+        }
+    }
+
+    if(selected_menu || esc_menu){return;}
 
     if(drawing == false){
 
@@ -238,5 +276,16 @@ void CreateLevel::buttonHandler(){
     else if(isKeyDown(CK_D))
     {
         char_pos -= 10;
+    }
+    else if(isKeyDown(CK_ESC))
+    {
+        if(esc_menu){
+            esc_menu = false;
+        }
+        else{
+            paint_esc_menu();
+            esc_menu = true;
+        }
+        Sleep(150);
     }
 }

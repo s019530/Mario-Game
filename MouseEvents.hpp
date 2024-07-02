@@ -24,4 +24,6 @@ void load_create_level_button(HWND hwnd);
 
 void kill_level_buton(HWND hwnd);
 
+void kill_create_level_button(HWND hwnd);
+
 #endif

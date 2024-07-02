@@ -11,7 +11,7 @@ const std::string esc_menu_words[1] = {"Return To Main Menu"};
 
 std::vector<RECT> main_menu_objects;
 std::vector<RECT> esc_menu_objects;
-
+std::vector<RECT> createlevel_esc_menu_objects;
 
 
 void init_mainmenu(){
@@ -24,18 +24,21 @@ void init_mainmenu(){
     RECT mainMenuRect = createRectUsingCords(windowRect, 300, 500);
     main_menu_objects.push_back(mainMenuRect);
     esc_menu_objects.push_back(mainMenuRect);
+    createlevel_esc_menu_objects.push_back(mainMenuRect);
 
     RECT firstWord = createRectUsingCords(mainMenuRect, mainMenuRect.right-mainMenuRect.left, 50);
     firstWord.bottom -= 200;
     firstWord.top -= 200;
     main_menu_objects.push_back(firstWord);
     esc_menu_objects.push_back(firstWord);
+    createlevel_esc_menu_objects.push_back(firstWord);
 
 
     RECT secondWord = firstWord;
     secondWord.bottom += 200;
     secondWord.top += 200;
     main_menu_objects.push_back(secondWord);
+    createlevel_esc_menu_objects.push_back(secondWord);
 
 
     main_menu_created = true;

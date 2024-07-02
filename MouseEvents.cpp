@@ -123,3 +123,13 @@ void kill_level_buton(HWND hwnd){
     Sleep(300);
 }
 
+void kill_create_level_button(HWND hwnd){
+    std::cout << "kill create level" << std::endl;
+    current_create_level = nullptr;
+    state_of_game = MAINMENU;
+
+    paint_mainmenu(hwnd, true);
+
+    Sleep(300);
+}
+

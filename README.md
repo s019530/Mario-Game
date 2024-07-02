@@ -27,6 +27,8 @@ v2.1 Finished the escape menu.
 
 v2.2 Started work on level creation. 
 
+v2.3 for level creation, added the ability to change the color and delete boxes. escape menu also added, only thing left to add is to program the save level function and then level creation in its most infant form should be done
+
 BUGS
 
 can't walk fully up to blocks / ground - v1.4

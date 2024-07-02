@@ -11,6 +11,7 @@
 
 extern std::vector<RECT> main_menu_objects; //0 - Main Menu Window, 1 - 1st Word, 2 - 2nd word
 extern std::vector<RECT> esc_menu_objects; //0 - Main Menu Window, 
+extern std::vector<RECT> createlevel_esc_menu_objects;
 
 extern const std::string esc_menu_words[1];
 

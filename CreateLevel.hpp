@@ -43,6 +43,9 @@ class CreateLevel{
 
         bool selected_menu = false;
 
+        bool esc_menu = false;
+
+        void paint_esc_menu();
 
 
 

@@ -25,7 +25,7 @@ v2.0 Redid the structure of the project, created a main menu and starting work o
 
 v2.1 Finished the escape menu.
 
-v2.2 Started work on level creation.
+v2.2 Started work on level creation. 
 
 BUGS
 

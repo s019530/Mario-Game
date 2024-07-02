@@ -6,6 +6,9 @@ HBRUSH white = CreateSolidBrush(RGB(250,250,250));
 HBRUSH black = CreateSolidBrush(RGB(0,0,0));
 HBRUSH green = CreateSolidBrush(RGB(0, 250, 0));
 HBRUSH brown = CreateSolidBrush(RGB(150,75,0));
+HBRUSH gray = CreateSolidBrush(RGB(128,128,128));
+HBRUSH yellow = CreateSolidBrush(RGB(255,255,0));
+std::vector<HBRUSH> all_colors = {skyBlue, white, green, brown, gray, yellow, black};
 
 HFONT menuFontNormal = CreateFont(50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
 HFONT menuFontBig = CreateFont(60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Times New Roman");
@@ -83,4 +86,8 @@ RECT pointsToRect(POINT one, POINT two){
     rect.bottom = (one.y > two.y) ? one.y : two.y;
 
     return rect;
+}
+
+void printRectCords(RECT rect){
+    std::cout << "top: " + std::to_string(rect.top) + " bottom: " + std::to_string(rect.bottom)  + " left: " + std::to_string(rect.left) + " right: " + std::to_string(rect.right) << std::endl;
 }

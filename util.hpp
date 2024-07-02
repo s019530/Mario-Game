@@ -19,6 +19,10 @@ extern HBRUSH white;
 extern HBRUSH black;
 extern HBRUSH green;
 extern HBRUSH brown;
+extern HBRUSH gray;
+extern HBRUSH yellow;
+
+extern std::vector<HBRUSH> all_colors;
 
 extern int state_of_game;
 extern int previous_state_of_game;
@@ -53,5 +57,7 @@ RECT createRectUsingCords(RECT rect, int size_width, int size_height);
 bool mouseInBox(RECT rect, POINT pt);
 
 RECT pointsToRect(POINT one, POINT two);
+
+void printRectCords(RECT rect);
 
 #endif

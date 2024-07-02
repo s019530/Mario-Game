@@ -75,6 +75,10 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_MOUSEMOVE:
         {
             mouse_move(hwnd);
+            POINT pt;
+            GetCursorPos(&pt);
+            ScreenToClient(hwnd, &pt);
+            //std::cout << "x: " + std::to_string(pt.x) + ", y: " + std::to_string(pt.y) << std::endl;
             break;
         }
         case WM_TIMER:

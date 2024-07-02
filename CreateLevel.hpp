@@ -24,13 +24,26 @@ class CreateLevel{
         POINT firstPoint;
         std::vector<RECT> rect_being_drawn;
 
-        std::vector<RECT> clouds;
-        std::vector<RECT> ground;
-        std::vector<RECT> brown_blocks;
+        RECT saved_selected_rect;
 
-        std::vector<std::vector<RECT>*> objects_to_be_painted = {&clouds, &ground, &brown_blocks, &rect_being_drawn};
+        std::vector<RECT> skyBlue_blocks;
+        std::vector<RECT> white_blocks;
+        std::vector<RECT> green_blocks;
+        std::vector<RECT> brown_blocks;
+        std::vector<RECT> gray_blocks;
+        std::vector<RECT> yellow_blocks;
+
+        std::vector<std::vector<RECT>*> objects_to_be_painted = {&skyBlue_blocks, &white_blocks, &green_blocks, &brown_blocks, &gray_blocks, &yellow_blocks, &rect_being_drawn};
 
         void buttonHandler();
+        void paint_selected_rectangle_menu();
+        void Create_Selected_Box_Menu();
+
+        std::vector<RECT> selected_box_menu_objects;
+
+        bool selected_menu = false;
+
+
 
 
 };
